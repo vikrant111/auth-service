@@ -6,7 +6,7 @@ const app = express();
 
 
 app.get("/", (req, res)=>{
-     res.send("welcome to authn service")
+     res.status(200).send("welcome to authn service")
 })
 
 
