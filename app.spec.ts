@@ -1,7 +1,8 @@
 
 import request from "supertest";
-import { calculateDiscount } from "./utils";
-import app from "./app";
+import { calculateDiscount } from "./src/utils";
+import app from "./src/app";
+
 
 
 describe("App", ()=>{
