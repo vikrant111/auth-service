@@ -4,16 +4,20 @@ import request from "supertest"
 import { AppDataSource } from "../../src/config/data-source";
 import { truncateTables } from "../utils";
 import { User } from "../../src/entity/User";
+import { Roles } from "../../src/constants";
 
 describe("POST /auth/register", ()=>{
     let connection: DataSource;
+
     beforeAll(async ()=>{
         connection = await AppDataSource.initialize()
     })
 
     beforeEach(async ()=>{
         // need to clean the database before each test run
-       await truncateTables(connection)
+        await connection.dropDatabase();
+        await connection.synchronize();
+    //    await truncateTables(connection)
         
     })
 
@@ -92,10 +96,56 @@ describe("POST /auth/register", ()=>{
 
         })
 
+        it("should return the id of the created user", async()=>{
+                       //AAA formula
+            // Arrange, Act, Assert
+            const userData = {
+                firstName:"Vikrant",
+                lastName: "tiwari",
+                email: "vikrant@gmail.com",
+                password: "345679secret"
+            }
+
+            //Act
+            const response = await request(app)
+            .post("/auth/register")
+            .send(userData)
+
+            //Assert
+            const userRepository = connection.getRepository(User)
+            const users = await userRepository.find();
+            expect(users.length).toBe(1);
+            expect(users[0]).toHaveProperty("id");
+            expect(typeof users[0].id).toBe("number");
+        })
+
+
+        it("should assign a customer role", async()=>{
+
+                       //AAA formula
+            // Arrange, Act, Assert
+            const userData = {
+                firstName:"Vikrant",
+                lastName: "tiwari",
+                email: "vikrant@gmail.com",
+                password: "345679secret"
+            }
+
+            //Act
+            const response = await request(app)
+            .post("/auth/register")
+            .send(userData)
+
+            //Assert
+            const userRepository = connection.getRepository(User)
+            const users = await userRepository.find();
+            expect(users[0]).toHaveProperty("role");
+            expect(users[0].role).toBe(Roles.CUSTOMER);
+        })
+
     })
 
     describe("Fields are missing", ()=>{
-
 
 
     })
