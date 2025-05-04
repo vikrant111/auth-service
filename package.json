@@ -1,33 +1,39 @@
 {
-  "name": "auth-service",
-  "version": "1.0.0",
-  "main": "server.ts",
-  "scripts": {
-    "dev": "nodemon --legacy-watch src/server.ts",
-    "test": "jest --watch --runInBand"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "@types/express": "^5.0.1",
-    "@types/http-errors": "^2.0.4",
-    "@types/jest": "^29.5.14",
-    "@types/node": "^22.15.3",
-    "@types/supertest": "^6.0.3",
-    "@types/winston": "^2.4.4",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "nodemon": "^3.1.10",
-    "supertest": "^7.1.0",
-    "ts-jest": "^29.3.2",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    "http-errors": "^2.0.0",
-    "winston": "^3.17.0"
-  }
+   "name": "auth-service",
+   "version": "1.0.0",
+   "main": "server.ts",
+   "scripts": {
+      "dev": "cross-env NODE_ENV=dev nodemon --legacy-watch src/server.ts",
+      "test": "jest --watch --runInBand",
+      "start": "ts-node src/index.ts",
+      "typeorm": "typeorm-ts-node-commonjs"
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "description": "",
+   "devDependencies": {
+      "@types/express": "^5.0.1",
+      "@types/http-errors": "^2.0.4",
+      "@types/jest": "^29.5.14",
+      "@types/node": "^22.15.3",
+      "@types/supertest": "^6.0.3",
+      "@types/winston": "^2.4.4",
+      "cross-env": "^7.0.3",
+      "dotenv": "^16.5.0",
+      "express": "^5.1.0",
+      "nodemon": "^3.1.10",
+      "supertest": "^7.1.0",
+      "ts-jest": "^29.3.2",
+      "ts-node": "^10.9.2",
+      "ts-node-dev": "^2.0.0",
+      "typescript": "^5.8.3"
+   },
+   "dependencies": {
+      "http-errors": "^2.0.0",
+      "pg": "^8.14.1",
+      "reflect-metadata": "^0.2.2",
+      "typeorm": "0.3.22",
+      "winston": "^3.17.0"
+   }
 }
