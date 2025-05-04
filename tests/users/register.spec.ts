@@ -1,0 +1,57 @@
+import app from "../../src/app"
+import request from "supertest"
+
+describe("POST /auth/register", ()=>{
+
+    describe("All fields are provided", ()=>{
+
+        it("should return the 201 status code", async()=>{
+
+            //AAA formula
+            // Arrange, Act, Assert
+            const userData = {
+                firstName:"Vikrant",
+                lastName: "tiwari",
+                email: "vikrant@gmail.com",
+                password: "345679secret"
+            }
+
+            //Act
+            const response = await request(app)
+            .post("/auth/register")
+            .send(userData)
+
+            //Assert
+            expect(response.statusCode).toBe(201)
+
+        })
+
+        it("should return valid json response", async()=>{
+             //AAA formula
+            // Arrange, Act, Assert
+            const userData = {
+                firstName:"Vikrant",
+                lastName: "tiwari",
+                email: "vikrant@gmail.com",
+                password: "345679secret"
+            }
+
+            //Act
+            const response = await request(app)
+            .post("/auth/register")
+            .send(userData)
+
+            //Assert
+            //the object is a type of record and the key is String and value is also a String
+            expect((response.headers as Record<string, string>)['content-type']).toEqual(expect.stringContaining("json"))
+        })
+
+    })
+
+    describe("Fields are missing", ()=>{
+
+
+
+    })
+
+})

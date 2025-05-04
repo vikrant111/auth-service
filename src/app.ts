@@ -2,12 +2,23 @@ import express, { NextFunction, Request, Response } from "express";
 import logger from "./config/logger";
 import createHttpError, { HttpError } from "http-errors";
 import path from "path";
+
+import authRouter from "./routes/auth";
+
+
 const app = express();
 
 
 app.get("/", (req, res)=>{
      res.status(200).send("welcome to authn service")
 })
+
+
+app.use("/auth", authRouter)
+
+
+
+
 
 
 
