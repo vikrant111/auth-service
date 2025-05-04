@@ -203,6 +203,32 @@ describe("POST /auth/register", ()=>{
 
     describe("Fields are missing", ()=>{
 
+        it("should return statusCode 400, if email field is missing", async()=>{
+  //AAA formula
+            // Arrange, Act, Assert
+            const userData = {
+                firstName:"Vikrant",
+                lastName: "tiwari",
+                email: "",
+                password: "345679secret"
+            }
+
+
+            //Act
+            const response = await request(app)
+            .post("/auth/register")
+            .send(userData)
+            
+            //Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User)
+            const users = await userRepository.find();
+    
+            // expect(userData).toHaveProperty("email");
+            expect(users).toHaveLength(0);
+
+
+        })
 
     })
 
