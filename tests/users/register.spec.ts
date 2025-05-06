@@ -262,5 +262,9 @@ describe("POST /auth/register", ()=>{
 
     })
 
+    it("should print hello", ()=>{
+        console.log("xyz")
+    })
+
 
 })
