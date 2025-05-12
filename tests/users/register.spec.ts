@@ -2,9 +2,11 @@ import { DataSource } from "typeorm"
 import app from "../../src/app"
 import request from "supertest"
 import { AppDataSource } from "../../src/config/data-source";
-import { truncateTables } from "../utils";
+import { isJWT, truncateTables } from "../utils";
 import { User } from "../../src/entity/User";
 import { Roles } from "../../src/constants";
+import { cookie } from "express-validator";
+import { RefreshToken } from "../../src/entity/RefreshToken";
 
 describe("POST /auth/register", ()=>{
     let connection: DataSource;
@@ -162,7 +164,7 @@ describe("POST /auth/register", ()=>{
             //Assert
             const userRepository = connection.getRepository(User)
             const users = await userRepository.find();
-            console.log("hashed password", users[0].password)
+            // console.log("hashed password", users[0].password)
             expect(users[0]).toHaveProperty("password");
             expect(users[0].password).toHaveLength(60);
             expect(users[0].password).not.toBe(userData.password);
@@ -195,6 +197,88 @@ describe("POST /auth/register", ()=>{
             const users = await userRepository.find();
             expect(response.statusCode).toBe(400);
             expect(users).toHaveLength(1);
+
+
+        })
+
+
+        it("it should return the access token and refresh token inside the cookies", async()=>{
+             //AAA formula
+            // Arrange, Act, Assert
+            const userData = {
+                firstName:"Vikrant",
+                lastName: "tiwari",
+                email: "vikrant@gmail.com",
+                password: "345679secret"
+            }
+
+            //Act
+            const response = await request(app)
+            .post("/auth/register")
+            .send(userData)
+
+            const userRepository = connection.getRepository(User);
+            // await userRepository.save({...userData, role:Roles.CUSTOMER})
+
+
+         
+            // Assert
+            let accessToken= null;
+            let refreshToken= null;
+            
+            const rawCookies = response.headers['set-cookie'];
+            const cookies: string[] = Array.isArray(rawCookies) ? rawCookies : [];
+
+            cookies.forEach((cookie) => {
+                if(cookie.startsWith('accessToken=')){
+                    accessToken = cookie.split(';')[0].split("=")[1]
+                }
+
+                if(cookie.startsWith('refreshToken=')){
+                    refreshToken = cookie.split(';')[0].split("=")[1]
+                }
+            });
+
+            console.log("access token", accessToken)
+            expect(accessToken).not.toBeNull();
+            expect(refreshToken).not.toBeNull();
+
+
+            expect(isJWT(accessToken)).toBeTruthy();
+
+
+        })
+
+
+        it("should store the refresh token inside the database", async()=>{
+          //AAA formula
+            // Arrange, Act, Assert
+            const userData = {
+                firstName:"Vikrant",
+                lastName: "tiwari",
+                email: "vikrant@gmail.com",
+                password: "345679secret"
+            }
+
+            //Act
+            const response = await request(app)
+            .post("/auth/register")
+            .send(userData)
+
+
+            
+            //Assert
+            const refreshTokenRepository = connection.getRepository(RefreshToken);
+            // const refreshTokens = await refreshTokenRepository.find(); 
+         
+
+            const tokens = await refreshTokenRepository.createQueryBuilder("refreshToken").where("refreshToken.userId = :userId", {
+                userId: (response.body as Record<string, string>).id
+            }).getMany()
+
+
+            expect(tokens).toHaveLength(1);
+
 
 
         })
@@ -260,6 +344,10 @@ describe("POST /auth/register", ()=>{
 
         })
 
+    })
+
+    it("should print hello", ()=>{
+        console.log("xyz")
     })
 
 
