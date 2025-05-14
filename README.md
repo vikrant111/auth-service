@@ -38,7 +38,7 @@ docker build -t auth-service:dev -f docker/dev/Dockerfile .
 
 
 
-docker run --rm -it -v $(pwd):/usr/src/app -v /usr/src/app/node_modules --env-file $(pwd)/.env -p 5501:5501 -e NODE_ENV=development auth-prep:dev
+docker run --rm -it -v ${pwd}:/usr/src/app -v /usr/src/app/node_modules --env-file ${pwd}/.env.dev -p 5501:5501 -e NODE_ENV=development auth-service:dev
 ℹ️ For Powershell users:
 use `${PWD}` instead of `$(pwd)`
 
@@ -62,7 +62,6 @@ docker ps
 
 // Stop the container using container id
 docker stop <container id>
-
 
 
 
