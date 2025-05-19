@@ -18,6 +18,7 @@ export class User {
     @Column({unique: true})
     email: string;
 
+    //{select: false} means whenever we will fetch this user record password will not come 
     @Column()
     password: string;
 

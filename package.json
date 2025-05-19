@@ -2,21 +2,22 @@
    "name": "auth-service",
    "version": "1.0.0",
    "main": "server.ts",
-  "scripts": {
-  "dev": "cross-env NODE_ENV=dev nodemon --legacy-watch src/server.ts",
-  "test": "jest --watch --runInBand",
-  "start": "ts-node src/index.ts",
-  "typeorm": "typeorm-ts-node-commonjs",
-  "docker:pg": "docker run --rm --name mernpg-container -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -v mernpgdata:/var/lib/postgresql/data -p 5432:5432 -d postgres",
-  "docker:express": "docker run --rm -it -v %cd%:/usr/src/app -v /usr/src/app/node_modules --env-file %cd%\\.env.dev -p 5501:5501 -e NODE_ENV=development auth-service:dev",
-  "docker:up": "npm run docker:pg && npm run docker:express"
-},
+   "scripts": {
+      "dev": "cross-env NODE_ENV=dev nodemon --legacy-watch src/server.ts",
+      "test": "jest --watch --runInBand",
+      "start": "ts-node src/index.ts",
+      "typeorm": "typeorm-ts-node-commonjs",
+      "docker:pg": "docker run --rm --name mernpg-container -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -v mernpgdata:/var/lib/postgresql/data -p 5432:5432 -d postgres",
+      "docker:express": "docker run --rm -it -v %cd%:/usr/src/app -v /usr/src/app/node_modules --env-file %cd%\\.env.dev -p 5501:5501 -e NODE_ENV=development auth-service:dev",
+      "docker:up": "npm run docker:pg && npm run docker:express"
+   },
    "keywords": [],
    "author": "",
    "license": "ISC",
    "description": "",
    "devDependencies": {
       "@types/bcrypt": "^5.0.2",
+      "@types/cookie-parser": "^1.4.8",
       "@types/express": "^5.0.1",
       "@types/http-errors": "^2.0.4",
       "@types/jest": "^29.5.14",
@@ -27,6 +28,8 @@
       "cross-env": "^7.0.3",
       "dotenv": "^16.5.0",
       "express": "^5.1.0",
+      "express-jwt": "^8.5.1",
+      "mock-jwks": "^1.0.10",
       "nodemon": "^3.1.10",
       "supertest": "^7.1.0",
       "ts-jest": "^29.3.2",
@@ -36,11 +39,14 @@
    },
    "dependencies": {
       "bcrypt": "^5.1.1",
+      "cookie-parser": "^1.4.7",
       "express-validator": "^7.2.1",
       "http-errors": "^2.0.0",
       "jsonwebtoken": "^9.0.2",
+      "jwks-rsa": "^3.2.0",
       "pg": "^8.14.1",
       "reflect-metadata": "^0.2.2",
+      "rsa-pem-to-jwk": "^1.1.3",
       "typeorm": "0.3.22",
       "winston": "^3.17.0"
    }

@@ -1,6 +1,6 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Response, Request  } from "express";
 import {JwtPayload, sign} from "jsonwebtoken";
-import { RegisterUserRequest } from "../types";
+import { AuthRequest, RegisterUserRequest } from "../types";
 import { UserService } from "../services/userService";
 import logger from "../config/logger";
 import { Logger } from "winston";
@@ -158,7 +158,7 @@ export class AuthController {
             })
 
             this.logger.info("user has been logged in", {id: user.id})
-            res.status(201).json({id: user.id})
+            res.status(200).json({id: user.id})
         }catch(err){
             next(err)
             return;
@@ -169,6 +169,13 @@ export class AuthController {
 
 
 
+
+ async self(request: AuthRequest, response: Response){
+        //extract the user id ...from token... req.auth.id
+        console.log(request.auth)
+        const user = await this.userService.findById(Number(request.auth.sub))
+        response.json({...user, password: undefined})
+    }
 
 
 

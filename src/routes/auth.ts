@@ -5,11 +5,12 @@ import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/User";
 import logger from "../config/logger";
 import registerValidator from "../validators/register-validator";
-import { RegisterUserRequest } from "../types";
+import { AuthRequest, RegisterUserRequest } from "../types";
 import { TokenService } from "../services/tokanService";
 import { RefreshToken } from "../entity/RefreshToken";
 import loginValidator from "../validators/login-validator";
 import { CredentialService } from "../services/CredentialService";
+import authenticate from "../middlewares/authenticate";
 
 
 const router = express.Router();
@@ -34,6 +35,20 @@ router.post(
     loginValidator, 
     (req: Request, res: Response, next: NextFunction) =>
          authController.login(req, res, next)
+);
+
+
+router.get(
+    "/self", 
+    authenticate,
+    (req: Request, res: Response) => authController.self(req as AuthRequest, res)
+);
+
+
+
+router.post(
+    "/refresh", 
+    (req: Request, res: Response) => authController.refresh(req, res)
 );
 
 

@@ -8,8 +8,10 @@ import { Roles } from "../../src/constants";
 import { cookie } from "express-validator";
 import { RefreshToken } from "../../src/entity/RefreshToken";
 
+
 describe("POST /auth/register", ()=>{
     let connection: DataSource;
+
 
     beforeAll(async ()=>{
         connection = await AppDataSource.initialize()
@@ -22,6 +24,9 @@ describe("POST /auth/register", ()=>{
     //    await truncateTables(connection)
         
     })
+
+
+
 
     afterAll(async ()=>{
         await connection.destroy()
