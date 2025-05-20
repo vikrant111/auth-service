@@ -239,6 +239,21 @@ async refresh(request: AuthRequest, response: Response, next: NextFunction){
 
 
 
+async logout(request: AuthRequest, response: Response, next: NextFunction){
+    try{
+        await this.tokenService.deleteRefreshToken(Number(request.auth.id));
+         this.logger.info("Refresh token has been deleted", {id: request.auth.id})
+         this.logger.info("User has been logged out", {id: request.auth.sub})
+         response.clearCookie('accessToken')
+         response.clearCookie('refreshToken')
+
+         response.status(200).json({})
+    }catch(error){
+        next(error);
+        return;
+    }
+}
+
 
 
 
