@@ -13,6 +13,7 @@ import { AppDataSource } from "../config/data-source";
 import { RefreshToken } from "../entity/RefreshToken";
 import { TokenService } from "../services/tokanService";
 import { CredentialService } from "../services/CredentialService";
+import { User } from "../entity/User";
 
 
 
@@ -176,6 +177,62 @@ export class AuthController {
         const user = await this.userService.findById(Number(request.auth.sub))
         response.json({...user, password: undefined})
     }
+
+
+
+
+async refresh(request: AuthRequest, response: Response, next: NextFunction){
+    try {
+        const payload: JwtPayload = {
+            sub: request.auth.sub,
+            role: request.auth.role
+        }
+
+        const user = await this.userService.findById(Number(request.auth.sub))
+        if(!user){
+            const error = createHttpError(400, "User with the token could not find!");
+            next(error)
+            return;
+        }
+
+        
+        // Generate new access token
+        const accessToken = this.tokenService.generateAccessToken(payload);
+
+        
+        // Create and persist new refresh token
+        const newRefreshToken = await this.tokenService.persistRefreshToken(user);
+        
+        // Delete the old refresh token first
+        await this.tokenService.deleteRefreshToken(Number(request.auth.id));
+        
+        // Generate new refresh token with the new ID
+        const refreshToken = this.tokenService.generateRefreshToken({
+            ...payload,
+            id: String(newRefreshToken.id)
+        });
+
+        response.cookie('accessToken', accessToken, {
+            domain: 'localhost',
+            sameSite: 'strict',
+            maxAge: 1000 * 60 * 60, // 1 hour
+            httpOnly: true
+        });
+
+        response.cookie('refreshToken', refreshToken, {
+            domain: 'localhost',
+            sameSite: 'strict',
+            maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
+            httpOnly: true
+        });
+
+        this.logger.info("Tokens rotated successfully", {userId: user.id});
+        response.status(200).json({id: user.id});
+    } catch(err) {
+        next(err);
+        return;
+    }
+}
 
 
 
