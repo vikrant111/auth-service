@@ -1,8 +1,7 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
-import { User } from "../entity/User"
 import { Config } from "."
-import { RefreshToken } from "../entity/RefreshToken"
+
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -14,7 +13,7 @@ export const AppDataSource = new DataSource({
     //don't use synchronize in production make it as false
     synchronize: false,
     logging: false,
-    entities: [User, RefreshToken],
+    entities: ["src/entity/*.ts"],
     //all the files inside the migration folder will be considered as the migration scripts
     migrations: ["src/migration/*.ts"],
     subscribers: [],

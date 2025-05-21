@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity({
     name:"users"
@@ -24,5 +24,11 @@ export class User {
     @Column()
     password: string;
 
+    // adding the id(primary key for tenant table) of tenant from tenant table
+    // as a foreign key to the users table 
 
+    //Many users can have one Tenant
+    //Example- Many users(Managers) can register to one restraunt
+
+    @ManyToOne
 }
