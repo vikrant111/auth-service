@@ -12,9 +12,10 @@ export const AppDataSource = new DataSource({
     password: Config.DB_PASSWORD,
     database: Config.DB_NAME,
     //don't use synchronize in production make it as false
-    synchronize: true,
+    synchronize: false,
     logging: false,
     entities: [User, RefreshToken],
-    migrations: [],
+    //all the files inside the migration folder will be considered as the migration scripts
+    migrations: ["src/migration/*.ts"],
     subscribers: [],
 })

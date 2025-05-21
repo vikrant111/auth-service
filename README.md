@@ -173,6 +173,32 @@ docker run --rm --name mernpg-container \
   -d postgres
 ```
 
+
+#### 2️⃣ Generate migration
+#### 2️⃣ add this command to the script of package.json
+"scripts": {
+      "dev": "cross-env NODE_ENV=dev nodemon --legacy-watch src/server.ts",
+      "test": "jest --watch --runInBand",
+      "start": "ts-node src/index.ts",
+      "migration:generate": "typeorm-ts-node-commonjs migration:generate",
+      "migration:run": "typeorm-ts-node-commonjs migration:run",
+      "migration:create": "typeorm-ts-node-commonjs migration:create",
+      "docker:pg": "docker run --rm --name mernpg-container -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -v mernpgdata:/var/lib/postgresql/data -p 5432:5432 -d postgres",
+      "docker:express": "docker run --rm -it -v %cd%:/usr/src/app -v /usr/src/app/node_modules --env-file %cd%\\.env.dev -p 5501:5501 -e NODE_ENV=development auth-service:dev",
+      "docker:up": "npm run docker:pg && npm run docker:express"
+   },
+
+#### 2️⃣ Run this command in terminal to generate the migration file inside the migrations folder 
+```bash
+npm run migration:generate -- src/migration/migration -d src/config/data-source.ts
+```
+
+#### 2️⃣ Run this command in terminal to run the migration file generated inside the migrations folder 
+```bash
+npm run migration:run -- -d src/config/data-source.ts
+```
+
+
 ## 📚 API Documentation
 
 ### Authentication Flow
