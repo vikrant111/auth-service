@@ -11,4 +11,4 @@ const jwk = rsaPemToJwk(privateKey, {use: 'sig'}, 'public')
 
 
 //paste this key inside the public/.well-known/jwks.json
-console.log(JSON.stringify(jwk));
+// console.log(JSON.stringify(jwk));

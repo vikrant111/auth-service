@@ -173,7 +173,7 @@ export class AuthController {
 
  async self(request: AuthRequest, response: Response){
         //extract the user id ...from token... req.auth.id
-        console.log(request.auth)
+        // console.log(request.auth)
         const user = await this.userService.findById(Number(request.auth.sub))
         response.json({...user, password: undefined})
     }

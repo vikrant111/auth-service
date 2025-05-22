@@ -20,7 +20,7 @@ export default expressjwt({
     //i.e whether the user have logged out of the application
         async isRevoked(req: Request, token){
             try{
-            console.log("this is revoked token----------------> ", token)
+            // console.log("this is revoked token----------------> ", token)
             const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
             const refreshToken = await refreshTokenRepository.findOne({
                 where:{

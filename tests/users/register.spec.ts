@@ -244,7 +244,7 @@ describe("POST /auth/register", ()=>{
                 }
             });
 
-            console.log("access token", accessToken)
+            // console.log("access token", accessToken)
             expect(accessToken).not.toBeNull();
             expect(refreshToken).not.toBeNull();
 
@@ -351,9 +351,6 @@ describe("POST /auth/register", ()=>{
 
     })
 
-    it("should print hello", ()=>{
-        console.log("xyz")
-    })
 
 
 })
