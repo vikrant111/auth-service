@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 
 
 import authRouter from "./routes/auth";
+import tenantRouter from "./routes/tenants";
+
 
 
 
@@ -24,6 +26,8 @@ app.get("/", (req, res)=>{
 
 
 app.use("/auth", authRouter)
+
+app.use("/tenants", tenantRouter)
 
 
 

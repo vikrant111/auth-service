@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Tenant } from "./Tenant";
 
 @Entity({
     name:"users"
@@ -30,5 +31,6 @@ export class User {
     //Many users can have one Tenant
     //Example- Many users(Managers) can register to one restraunt
 
-    @ManyToOne
+    @ManyToOne(()=>Tenant)
+    tenant: Tenant
 }
