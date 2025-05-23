@@ -43,6 +43,18 @@ router.get(
 
 
 
+router.get(
+    "/:id",
+    authenticate,
+    //only admin can access this route
+    canAccess([Roles.ADMIN]),
+    (request: Request, response: Response, next: NextFunction)=>{
+    tenantController.getTenantByID(request, response, next);
+})
+
+
+
+
 
 
 export default router;

@@ -46,7 +46,7 @@ export class TenantController {
 
 
    async getTenantsList(
-    request: CreateTenantRequest,
+    request: Request,
     response: Response,
     next: NextFunction
   ){
@@ -60,6 +60,39 @@ export class TenantController {
     } catch (err) {
       next(err);
     }
+
+  }
+
+
+  async getTenantByID(
+    request: Request,
+    response: Response,
+    next: NextFunction){
+
+      const tenantId = request.params.id;
+
+      try{
+
+      if(!tenantId){
+        response.status(400).json({error:"Tenant id is required!"})
+        return;
+      }
+
+      const tenant = await this.tenantService.tenantByID(Number(tenantId));
+
+      if(!tenant){
+        return response.status(404).json({error: "Tenant not found!"})
+      }
+
+       response.status(200).json({tenant})
+
+      }catch(err){
+        next(err)
+      }
+
+
+
+
 
   }
 

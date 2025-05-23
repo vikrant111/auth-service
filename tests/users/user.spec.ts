@@ -42,7 +42,7 @@ describe("GET /auth/self", () => {
   describe("Given all fields", () => {
     it("should return the 200 status code", async () => {
           // generete token 
-      const accessToken = jwks.token({sub: String(1), role: Roles.CUSTOMER})
+      const accessToken = jwks.token({sub: String(1), role: Roles.ADMIN})
       const response = await request(app)
       .get("/auth/self")
       .set('Cookie', [`accessToken= ${accessToken};`])
@@ -61,7 +61,7 @@ describe("GET /auth/self", () => {
             password: "345679secret"
         }
         const userRepository = connection.getRepository(User);
-        const data = await userRepository.save({...userData, role:Roles.CUSTOMER })
+        const data = await userRepository.save({...userData, role:Roles.ADMIN })
 
 
         // generete token 
@@ -89,7 +89,7 @@ describe("GET /auth/self", () => {
             password: "345679secret"
         }
         const userRepository = connection.getRepository(User);
-        const data = await userRepository.save({...userData, role:Roles.CUSTOMER })
+        const data = await userRepository.save({...userData, role:Roles.ADMIN })
 
 
         // generete token 
@@ -118,7 +118,7 @@ describe("GET /auth/self", () => {
             password: "345679secret"
         }
         const userRepository = connection.getRepository(User);
-         await userRepository.save({...userData, role:Roles.CUSTOMER })
+         await userRepository.save({...userData, role:Roles.ADMIN })
 
 
         // generete token 

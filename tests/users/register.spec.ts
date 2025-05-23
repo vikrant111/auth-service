@@ -127,7 +127,7 @@ describe("POST /auth/register", ()=>{
         })
 
 
-        it("should assign a customer role", async()=>{
+        it("should assign a ADMIN role", async()=>{
 
                        //AAA formula
             // Arrange, Act, Assert
@@ -147,7 +147,7 @@ describe("POST /auth/register", ()=>{
             const userRepository = connection.getRepository(User)
             const users = await userRepository.find();
             expect(users[0]).toHaveProperty("role");
-            expect(users[0].role).toBe(Roles.CUSTOMER);
+            expect(users[0].role).toBe(Roles.ADMIN);
         })
 
         it("should store the hashed password", async()=>{
@@ -189,7 +189,7 @@ describe("POST /auth/register", ()=>{
             }
 
             const userRepository = connection.getRepository(User)
-            await userRepository.save({...userData, role: Roles.CUSTOMER});
+            await userRepository.save({...userData, role: Roles.ADMIN});
 
             //Act
             const response = await request(app)
@@ -223,7 +223,7 @@ describe("POST /auth/register", ()=>{
             .send(userData)
 
             const userRepository = connection.getRepository(User);
-            // await userRepository.save({...userData, role:Roles.CUSTOMER})
+            // await userRepository.save({...userData, role:Roles.ADMIN})
 
 
          

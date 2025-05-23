@@ -37,6 +37,14 @@ export interface ITenant {
 }
 
 
+
+
 export interface CreateTenantRequest extends Request{
     body: ITenant
 }
+
+
+
+
+
+
