@@ -2,7 +2,7 @@ import { DataSource } from "typeorm"
 import app from "../../src/app"
 import request from "supertest"
 import { AppDataSource } from "../../src/config/data-source";
-import { isJWT, truncateTables } from "../utils";
+import { isJWT } from "../utils";
 import { User } from "../../src/entity/User";
 import { Roles } from "../../src/constants";
 import { cookie } from "express-validator";
