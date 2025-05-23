@@ -55,6 +55,18 @@ router.get(
 
 
 
+router.post(
+    "/:id",
+    tenantValidator,
+    authenticate,
+    //only admin can access this route
+    canAccess([Roles.ADMIN]),
+    (request: Request, response: Response, next: NextFunction)=>{
+    tenantController.updateTenantData(request, response, next);
+})
+
+
+
 
 
 export default router;

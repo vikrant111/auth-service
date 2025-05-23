@@ -9,8 +9,29 @@ export class TenantService {
     return await this.tenantRepository.save(tenantData);
   }
 
+
+  async updateTenant(id: number, tenantData: Partial<ITenant>) {
+  const tenant = await this.tenantRepository.findOne({ where: { id } });
+
+  if (!tenant) {
+    throw new Error(`Tenant with ID ${id} not found`);
+  }
+
+  const updatedTenant = {
+    ...tenant,
+    ...tenantData,
+  };
+
+  return await this.tenantRepository.save(updatedTenant);
+}
+
+
   async tenantsList() {
-    const tenants = await this.tenantRepository.find();
+    const tenants = await this.tenantRepository.find({
+      order:{
+        id: "ASC"
+      }
+    });
     return tenants;
   }
 

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { TenantService } from "../services/TenantService";
 import { CreateTenantRequest } from "../types";
-import { Logger } from "winston";
+import { add, Logger } from "winston";
 import { validationResult } from "express-validator";
 
 export class TenantController {
@@ -97,5 +97,40 @@ export class TenantController {
   }
 
 
-  
+  async updateTenantData(
+    request: Request,
+    response: Response,
+    next: NextFunction){
+
+      const tenantId = request.params.id
+      const {name, address} = request.body;
+
+      try{
+
+              const result = validationResult(request);
+      if (!result.isEmpty()) {
+          response.status(400).json({errors: result.array()})
+          return
+      }
+
+      if(!tenantId){
+        return response.status(400).json({error: "Tenant id is required!"});
+      }
+
+      const tenant = await this.tenantService.tenantByID(Number(tenantId));
+
+      if(!tenant){
+        return response.status(404).json({error: "Tenant not found!"});
+      }
+
+       const updated = await this.tenantService.updateTenant(Number(tenantId), {name, address});
+    return response.status(200).json(updated);
+
+      }catch(err){
+        next(err)
+      }
+
+
+
+  }
 }
