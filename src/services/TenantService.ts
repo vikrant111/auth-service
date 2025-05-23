@@ -22,7 +22,8 @@ export class TenantService {
     ...tenantData,
   };
 
-  return await this.tenantRepository.save(updatedTenant);
+   await this.tenantRepository.update(id, tenantData);
+   return updatedTenant
 }
 
 

@@ -25,6 +25,8 @@ app.get("/", (req, res)=>{
 })
 
 
+
+
 app.use("/auth", authRouter)
 
 app.use("/tenants", tenantRouter)
@@ -32,7 +34,9 @@ app.use("/tenants", tenantRouter)
 
 
 
-
+app.put('/tenants', (req, res) => {
+  res.status(400).json({ error: "Tenant ID is required in the URL. Use /tenants/:id" });
+});
 
 
 //adding a global error handler middleware should always be kept at last

@@ -45,6 +45,8 @@ export class TenantController {
   }
 
 
+
+
    async getTenantsList(
     request: Request,
     response: Response,
@@ -62,6 +64,8 @@ export class TenantController {
     }
 
   }
+
+
 
 
   async getTenantByID(
@@ -90,11 +94,9 @@ export class TenantController {
         next(err)
       }
 
-
-
-
-
   }
+
+
 
 
   async updateTenantData(
@@ -107,15 +109,17 @@ export class TenantController {
 
       try{
 
-              const result = validationResult(request);
+      const result = validationResult(request);
       if (!result.isEmpty()) {
           response.status(400).json({errors: result.array()})
           return
       }
 
-      if(!tenantId){
-        return response.status(400).json({error: "Tenant id is required!"});
-      }
+      
+
+     if (!tenantId || isNaN(Number(tenantId))) {
+      return response.status(400).json({ error: "Valid tenant ID is required in the URL!" });
+    }
 
       const tenant = await this.tenantService.tenantByID(Number(tenantId));
 
@@ -133,4 +137,7 @@ export class TenantController {
 
 
   }
+
+
+
 }

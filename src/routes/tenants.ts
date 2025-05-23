@@ -55,7 +55,7 @@ router.get(
 
 
 
-router.post(
+router.put(
     "/:id",
     tenantValidator,
     authenticate,
