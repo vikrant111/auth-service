@@ -44,4 +44,11 @@ export class TenantService {
     });
     return tenant;
   }
+
+
+  async deleteTenant(id: number){
+     const deletedTenant = await this.tenantRepository.delete(id);
+    return {message: `Tenant with id ${id} is deleted successfully!`};
+
+  }
 }

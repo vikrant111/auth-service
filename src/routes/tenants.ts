@@ -68,5 +68,17 @@ router.put(
 
 
 
+router.delete(
+    "/:id",
+    authenticate,
+    //only admin can access this route
+    canAccess([Roles.ADMIN]),
+    (request: Request, response: Response, next: NextFunction)=>{
+    tenantController.deleteTenantData(request, response, next);
+})
+
+
+
+
 
 export default router;

@@ -115,7 +115,7 @@ export class TenantController {
           return
       }
 
-      
+
 
      if (!tenantId || isNaN(Number(tenantId))) {
       return response.status(400).json({ error: "Valid tenant ID is required in the URL!" });
@@ -137,6 +137,43 @@ export class TenantController {
 
 
   }
+
+
+
+
+  
+  async deleteTenantData(
+    request: Request,
+    response: Response,
+    next: NextFunction){
+
+      const tenantId = request.params.id
+
+      try{
+
+
+     if (!tenantId || isNaN(Number(tenantId))) {
+      return response.status(400).json({ error: "Valid tenant ID is required in the URL!" });
+    }
+
+      const tenant = await this.tenantService.tenantByID(Number(tenantId));
+
+      if(!tenant){
+        return response.status(404).json({error: "Tenant not found!"});
+      }
+
+       const deletedTenant = await this.tenantService.deleteTenant(Number(tenantId));
+    return response.status(200).json(deletedTenant);
+
+      }catch(err){
+        next(err)
+      }
+
+
+
+  }
+
+
 
 
 
