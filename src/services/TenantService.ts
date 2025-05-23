@@ -47,7 +47,7 @@ export class TenantService {
 
 
   async deleteTenant(id: number){
-     const deletedTenant = await this.tenantRepository.delete(id);
+    await this.tenantRepository.delete(id);
     return {message: `Tenant with id ${id} is deleted successfully!`};
 
   }

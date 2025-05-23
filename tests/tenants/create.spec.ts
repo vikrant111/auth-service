@@ -195,7 +195,7 @@ describe("POST /tenants", ()=>{
 
 
 
-         it("should find and return the by id", async()=>{
+         it("should find and return the tenant by id", async()=>{
 
             //AAA formula
             // Arrange, Act, Assert
@@ -214,7 +214,6 @@ describe("POST /tenants", ()=>{
             .get("/tenants/1")
             .set('Cookie', [`accessToken=${adminToken}`])
 
-             expect(response.statusCode).toBe(200)
 
             const tenantRepository = connection.getRepository(Tenant);
             const tenant = await tenantRepository.findOne({where:{
@@ -224,13 +223,46 @@ describe("POST /tenants", ()=>{
 
             //Assert
 
-            console.log("response body for the test", response.body)
             expect(response.statusCode).toBe(200);
             expect(response.body).toBeDefined();
             expect(tenant).not.toBeNull()
             expect(response.body.tenant.name).toBe(tenantData.name);
             expect(response.body.tenant.address).toBe(tenantData.address);
 
+           
+            
+        })
+
+
+
+        it("should find and delete the tenant by id", async()=>{
+
+            //AAA formula
+            // Arrange, Act, Assert
+            const tenantData = {
+               name: "tenantName",
+               address: "tenantAddress"
+            }
+
+            //Act
+             await request(app)
+            .post("/tenants")
+            .set('Cookie', [`accessToken=${adminToken}`])
+            .send(tenantData);
+
+            // Act: Delete tenant
+            const deleteResponse = await request(app)
+                .delete(`/tenants/1`)
+                .set("Cookie", [`accessToken=${adminToken}`]);
+
+            expect(deleteResponse.statusCode).toBe(200);
+
+            // Assert: Confirm tenant is deleted
+            const fetchAfterDelete = await request(app)
+                .get(`/tenants/1`)
+                .set("Cookie", [`accessToken=${adminToken}`]);
+
+            expect(fetchAfterDelete.statusCode).toBe(404);
            
             
         })
