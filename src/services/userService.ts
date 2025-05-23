@@ -25,7 +25,7 @@ export class UserService {
     //hash the password before storing it to database
     const hashedPassword = await bcrypt.hash(password, saltRounds, )
     try{
-        return await this.userRepository.save({ firstName, lastName, email, password:hashedPassword, role:Roles.CUSTOMER});
+        return await this.userRepository.save({ firstName, lastName, email, password:hashedPassword, role:Roles.ADMIN});
     }catch(err){
         const error = createHttpError(500, "Failed to store the data in database")
         throw err;

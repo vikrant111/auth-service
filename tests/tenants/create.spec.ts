@@ -159,6 +159,42 @@ describe("POST /tenants", ()=>{
 
 
 
+
+
+
+    })
+
+
+
+
+
+
+      describe("Not given all fields", ()=>{
+
+        it("should return a 400 status code", async()=>{
+             //AAA formula
+            // Arrange, Act, Assert
+            const tenantData = {
+               name: "tenant Name",
+               address: ""
+            }
+
+            //Act
+            const response = await request(app)
+            .post("/tenants")
+            .set('Cookie', [`accessToken=${adminToken}`])
+            .send(tenantData)
+
+            //Assert
+            expect(response.statusCode).toBe(400)
+        })
+
+
+
+        
+
+
+
     })
 
 })
