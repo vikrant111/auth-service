@@ -14,6 +14,7 @@ import { RefreshToken } from "../entity/RefreshToken";
 import { TokenService } from "../services/tokanService";
 import { CredentialService } from "../services/CredentialService";
 import { User } from "../entity/User";
+import { Roles } from "../constants";
 
 
 
@@ -41,7 +42,7 @@ export class AuthController {
 
         this.logger.debug("New request to register a user", {firstName, lastName, email, password:"******"})
         try{
-            const user = await this.userService.create({firstName, lastName, email, password})
+            const user = await this.userService.create({firstName, lastName, email, password, role: Roles.ADMIN})
             this.logger.info("User has been registered", {id: user.id})
 
             let publicKey: Buffer;
