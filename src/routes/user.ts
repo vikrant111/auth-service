@@ -28,7 +28,7 @@ router.post(
     authenticate,
     //only admin can access this route
     canAccess([Roles.ADMIN]),
-    (request: Request, response: Response)=>{
+    (request: Request, response: Response, next: NextFunction)=>{
     userController.create(request, response, next);
 })
 
