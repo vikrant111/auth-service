@@ -7,7 +7,7 @@ import { User } from "../../src/entity/User";
 import { Roles } from "../../src/constants";
 
 
-describe("POST /auth/users", () => {
+describe("POST /users", () => {
   let connection: DataSource;
       let jwks: ReturnType<typeof createJWKSMock>;
      let adminToken: string;
@@ -82,7 +82,40 @@ describe("POST /auth/users", () => {
       
     });
 
+ it("should create a manager user", async () => {
+        // register user in database
+        const userData = {
+            firstName:"Vikrant",
+            lastName: "tiwari",
+            email: "vikrant@gmail.com",
+            password: "345679secret",
+            tenantID: 1
+        }
+    
 
+
+        // generete token 
+        // const accessToken = jwks.token({sub: String(data.id), role: data.role})
+
+        // add token to cookie
+      await request(app)
+      .post("/users")
+      .set('Cookie', [`accessToken=${adminToken}`])
+      .send(userData);
+
+
+      const userRespository = connection.getRepository(User);
+      const users = await userRespository.find();
+
+     
+      //Assert
+      expect(users).toHaveLength(1);
+      expect(users[0].role).toBe(Roles.MANAGER)
+      
+    });
+
+
+    
        it("should create a manager user", async () => {
         // register user in database
         const userData = {
@@ -122,6 +155,50 @@ describe("POST /auth/users", () => {
 
 
   });
+
+
+
+  describe("Missing fields", ()=>{
+    
+ it("should check for all the required fields", async () => {
+        // register user in database
+        const userData = {
+            firstName:"",
+            lastName: "tiwari",
+            email: "vikrant@gmail.com",
+            password: "345679secret",
+            tenantID: 1
+        }
+    
+
+
+        // generete token 
+        // const accessToken = jwks.token({sub: String(data.id), role: data.role})
+
+        // add token to cookie
+      const response = await request(app)
+      .post("/users")
+      .set('Cookie', [`accessToken=${adminToken}`])
+      .send(userData);
+
+
+      // const userRespository = connection.getRepository(User);
+      // const users = await userRespository.find();
+
+     
+      //Assert
+    expect(response.status).toBe(400); // or whatever your validation returns
+    // expect(response.body.message).toMatch(/firstName is required/i);
+
+
+      // Make sure no user was inserted
+    const userRepository = connection.getRepository(User);
+    const users = await userRepository.find();
+    expect(users).toHaveLength(0);
+      
+    });
+
+  })
 
 
 

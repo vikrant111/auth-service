@@ -12,6 +12,7 @@ import tenantValidator from '../validators/tenant-validator';
 import { UserController } from '../controllers/UserController';
 import { UserService } from '../services/userService';
 import { User } from '../entity/User';
+import userValidator from '../validators/user-validator';
 
 
 const router = express.Router();
@@ -25,6 +26,7 @@ const userController = new UserController(userService);
 
 router.post(
     "/",
+    userValidator,
     authenticate,
     //only admin can access this route
     canAccess([Roles.ADMIN]),
