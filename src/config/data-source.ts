@@ -13,8 +13,8 @@ export const AppDataSource = new DataSource({
     //don't use synchronize in production make it as false
     synchronize: false,
     logging: false,
-    entities: ["src/entity/*.ts"],
+    entities: ["src/entity/*.{ts, js}"],
     //all the files inside the migration folder will be considered as the migration scripts
-    migrations: ["src/migration/*.ts"],
+    migrations: ["src/migration/*.{ts, js}"],
     subscribers: [],
 })
