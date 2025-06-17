@@ -35,10 +35,9 @@ router.post(
 
 router.get(
     "/",
-    authenticate,
     //only admin can access this route
-    canAccess([Roles.ADMIN]),
-    listTenantValidator,
+    // canAccess([Roles.ADMIN]),
+    // listTenantValidator,
     (request: Request, response: Response, next: NextFunction)=>{
     tenantController.getTenantsList(request, response, next);
 })
