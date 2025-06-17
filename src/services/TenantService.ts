@@ -1,5 +1,5 @@
 import { Repository } from "typeorm";
-import { ITenant } from "../types";
+import { ITenant, TenantQueryParams } from "../types";
 import { Tenant } from "../entity/Tenant";
 
 export class TenantService {
@@ -27,13 +27,30 @@ export class TenantService {
 }
 
 
-  async tenantsList() {
-    const tenants = await this.tenantRepository.find({
-      order:{
-        id: "ASC"
-      }
-    });
-    return tenants;
+  async tenantsList(validatedQuery: TenantQueryParams) {
+    // const tenants = await this.tenantRepository.find({
+    //   order:{
+    //     id: "ASC"
+    //   }
+    // });
+    // return tenants;
+    const queryBuilder = this.tenantRepository.createQueryBuilder("tenant");
+
+        if (validatedQuery.q) {
+            const searchTerm = `%${validatedQuery.q}%`;
+            queryBuilder.where(
+                "CONCAT(tenant.name, ' ', tenant.address) ILike :q",
+                { q: searchTerm },
+            );
+        }
+
+        const result = await queryBuilder
+            .skip((validatedQuery.currentPage - 1) * validatedQuery.perPage)
+            .take(validatedQuery.perPage)
+            .orderBy("tenant.id", "DESC")
+            .getManyAndCount();
+        return result;
+        
   }
 
   async tenantByID(id: number) {

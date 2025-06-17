@@ -13,6 +13,9 @@ import { UserController } from '../controllers/UserController';
 import { UserService } from '../services/userService';
 import { User } from '../entity/User';
 import userValidator from '../validators/user-validator';
+import listUserValidator from '../validators/list-user-validator';
+import updateUserValidator from '../validators/update-user-validator';
+import { UpdateUserRequest } from '../types';
 
 
 const router = express.Router();
@@ -21,7 +24,7 @@ const userRepository = AppDataSource.getRepository(User);
 
 const userService = new UserService(userRepository);
 
-const userController = new UserController(userService);
+const userController = new UserController(userService, logger);
 
 
 router.post(
@@ -35,51 +38,51 @@ router.post(
 })
 
 
-
-// router.get(
-//     "/",
-//     authenticate,
-//     //only admin can access this route
-//     canAccess([Roles.ADMIN]),
-//     (request: Request, response: Response, next: NextFunction)=>{
-//     tenantController.getTenantsList(request, response, next);
-// })
-
-
-
-// router.get(
-//     "/:id",
-//     authenticate,
-//     //only admin can access this route
-//     canAccess([Roles.ADMIN]),
-//     (request: Request, response: Response, next: NextFunction)=>{
-//     tenantController.getTenantByID(request, response, next);
-// })
+router.patch(
+    "/:id",
+    authenticate,
+    canAccess([Roles.ADMIN]),
+    updateUserValidator,
+    (request: UpdateUserRequest, response: Response, next: NextFunction)=>{
+        userController.updateUserData(request, response, next);
+    }
+)
 
 
 
-
-// router.put(
-//     "/:id",
-//     tenantValidator,
-//     authenticate,
-//     //only admin can access this route
-//     canAccess([Roles.ADMIN]),
-//     (request: Request, response: Response, next: NextFunction)=>{
-//     tenantController.updateTenantData(request, response, next);
-// })
-
+router.get(
+    "/",
+    authenticate,
+    //only admin can access this route
+    canAccess([Roles.ADMIN]),
+    listUserValidator,
+    (request: Request, response: Response, next: NextFunction)=>{
+    userController.getUsersList(request, response, next);
+})
 
 
 
-// router.delete(
-//     "/:id",
-//     authenticate,
-//     //only admin can access this route
-//     canAccess([Roles.ADMIN]),
-//     (request: Request, response: Response, next: NextFunction)=>{
-//     tenantController.deleteTenantData(request, response, next);
-// })
+router.get(
+    "/:id",
+    authenticate,
+    //only admin can access this route
+    canAccess([Roles.ADMIN]),
+    (request: Request, response: Response, next: NextFunction)=>{
+    userController.getUserByID(request, response, next);
+})
+
+
+
+
+
+router.delete(
+    "/:id",
+    authenticate,
+    //only admin can access this route
+    canAccess([Roles.ADMIN]),
+    (request: Request, response: Response, next: NextFunction)=>{
+    userController.deleteUserData(request, response, next);
+})
 
 
 

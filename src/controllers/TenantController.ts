@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { TenantService } from "../services/TenantService";
-import { CreateTenantRequest } from "../types";
+import { CreateTenantRequest, TenantQueryParams } from "../types";
 import { add, Logger } from "winston";
-import { validationResult } from "express-validator";
+import { matchedData, validationResult } from "express-validator";
 
 export class TenantController {
   constructor(
@@ -52,13 +52,20 @@ export class TenantController {
     response: Response,
     next: NextFunction
   ){
+    const validatedQuery = matchedData(request, { onlyValidData: true });
 
     try {
-      const allTenants = await this.tenantService.tenantsList();
+
+      const [allTenants, count] = await this.tenantService.tenantsList(validatedQuery as TenantQueryParams,);
 
       this.logger.info("Successfully listed tenants", allTenants)
 
-      response.status(200).json(allTenants);
+      response.status(200).json({
+                currentPage: validatedQuery.currentPage as number,
+                perPage: validatedQuery.perPage as number,
+                total: count,
+                data: allTenants,
+            });
     } catch (err) {
       next(err);
     }

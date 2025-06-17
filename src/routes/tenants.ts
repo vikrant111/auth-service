@@ -9,6 +9,7 @@ import authenticate from '../middlewares/authenticate';
 import { canAccess } from '../middlewares/canAccess';
 import { Roles } from '../constants';
 import tenantValidator from '../validators/tenant-validator';
+import listTenantValidator from '../validators/list-tenant-validator';
 
 
 const router = express.Router();
@@ -37,6 +38,7 @@ router.get(
     authenticate,
     //only admin can access this route
     canAccess([Roles.ADMIN]),
+    listTenantValidator,
     (request: Request, response: Response, next: NextFunction)=>{
     tenantController.getTenantsList(request, response, next);
 })
