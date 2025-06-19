@@ -6,6 +6,7 @@
   <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
   <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"/>
   <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white" alt="JWT"/>
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=YOUR_PROJECT_KEY&metric=alert_status" alt="SonarCloud Status"/>
 </div>
 
 A robust authentication microservice built with TypeScript, Express, and TypeORM, featuring JWT-based authentication and comprehensive user management.
@@ -16,6 +17,8 @@ A robust authentication microservice built with TypeScript, Express, and TypeORM
 - [Prerequisites](#-prerequisites)
 - [Getting Started](#-getting-started)
 - [Docker Setup](#-docker-setup)
+- [Supabase for Cloud DB Testing](#supabase-for-cloud-db-testing)
+- [SonarCloud Code Quality](#sonarcloud-code-quality)
 - [API Documentation](#-api-documentation)
 - [Development](#-development)
 
@@ -56,7 +59,7 @@ A robust authentication microservice built with TypeScript, Express, and TypeORM
 graph TD
     A[Client] -->|HTTP Request| B[Auth Service]
     B -->|Validate| C[JWT Middleware]
-    C -->|Query| D[PostgreSQL]
+    C -->|Query| D[PostgreSQL (Local/Cloud: Supabase)]
     B -->|Generate| E[JWT Token]
     B -->|Store| F[User Data]
     style A fill:#f9f,stroke:#333,stroke-width:2px
@@ -79,7 +82,7 @@ flowchart LR
     end
     
     subgraph Database
-        H[(PostgreSQL)]
+        H[(PostgreSQL (Local/Cloud: Supabase))]
     end
     
     Client --> D
@@ -199,98 +202,64 @@ npm run migration:run -- -d src/config/data-source.ts
 ```
 
 
+## 🧪 Supabase for Cloud DB Testing
+
+You can use [Supabase](https://supabase.com/) as a managed PostgreSQL database for running tests in CI or locally. This is useful for cloud-based pipelines or when you want a consistent, isolated DB for test runs.
+
+### Setup
+1. Create a free project on [Supabase](https://app.supabase.com/).
+2. Get your Supabase DB connection string from the project settings.
+3. Create a `.env.test` file in your project root:
+
+```env
+DB_HOST=your-supabase-host.supabase.co
+DB_PORT=5432
+DB_USERNAME=your-supabase-username
+DB_PASSWORD=your-supabase-password
+DB_DATABASE=postgres
+```
+
+4. Update your test scripts to use `.env.test` or override env vars in your CI pipeline.
+
+### Example (package.json script)
+```json
+"scripts": {
+  "test:cloud": "cross-env NODE_ENV=test dotenv -e .env.test -- jest --runInBand"
+}
+```
+
+## 🛡️ SonarCloud Code Quality
+
+[SonarCloud](https://sonarcloud.io/) is used for static code analysis and code review automation.
+
+### Setup
+1. Sign up at [SonarCloud](https://sonarcloud.io/) and link your repository.
+2. Add a `sonar-project.properties` file to your repo root:
+
+```
+sonar.organization=your-org
+sonar.projectKey=your-project-key
+sonar.sources=src
+sonar.tests=tests
+sonar.test.inclusions=**/*.spec.ts
+sonar.typescript.lcov.reportPaths=coverage/lcov.info
+```
+
+3. Add SonarCloud to your CI pipeline (see [SonarCloud Docs](https://docs.sonarcloud.io/ci-integration/)).
+4. Add the SonarCloud badge to the top of this README (replace `YOUR_PROJECT_KEY`).
+
+### Example GitHub Actions step
+```yaml
+- name: SonarCloud Scan
+  uses: SonarSource/sonarcloud-github-action@master
+  with:
+    projectKey: your-project-key
+    organization: your-org
+  env:
+    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+```
+
 ## 📚 API Documentation
 
 ### Authentication Flow
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Auth Service
-    participant Database
-
-    Client->>Auth Service: POST /auth/register
-    Auth Service->>Database: Create User
-    Database-->>Auth Service: User Created
-    Auth Service-->>Client: JWT Token
-
-    Client->>Auth Service: POST /auth/login
-    Auth Service->>Database: Verify Credentials
-    Database-->>Auth Service: User Verified
-    Auth Service-->>Client: JWT Token
 ```
-
-### API Endpoints
-```mermaid
-graph TD
-    A[API Endpoints] --> B[Authentication]
-    A --> C[User Management]
-    
-    B --> D[POST /auth/register]
-    B --> E[POST /auth/login]
-    B --> F[POST /auth/logout]
-    
-    C --> G[GET /users]
-    C --> H[GET /users/:id]
-    C --> I[PUT /users/:id]
-    C --> J[DELETE /users/:id]
-    
-    style A fill:#f96,stroke:#333,stroke-width:2px
-    style B fill:#bbf,stroke:#333,stroke-width:2px
-    style C fill:#bbf,stroke:#333,stroke-width:2px
-```
-
-## 🛠️ Development
-
-### Project Structure
-```
-auth-service/
-├── src/
-│   ├── controllers/    # Request handlers
-│   ├── middlewares/    # Custom middlewares
-│   ├── models/         # Database models
-│   ├── routes/         # API routes
-│   └── services/       # Business logic
-├── tests/              # Test files
-├── docker/             # Docker configuration
-└── public/             # Static files
-```
-
-### Available Scripts
-<div align="center">
-  <table>
-    <tr>
-      <td align="center">🚀</td>
-      <td><code>npm run dev</code></td>
-      <td>Start development server</td>
-    </tr>
-    <tr>
-      <td align="center">🏗️</td>
-      <td><code>npm run build</code></td>
-      <td>Build for production</td>
-    </tr>
-    <tr>
-      <td align="center">⚡</td>
-      <td><code>npm start</code></td>
-      <td>Start production server</td>
-    </tr>
-    <tr>
-      <td align="center">🧪</td>
-      <td><code>npm test</code></td>
-      <td>Run tests</td>
-    </tr>
-    <tr>
-      <td align="center">🔍</td>
-      <td><code>npm run lint</code></td>
-      <td>Run linter</td>
-    </tr>
-  </table>
-</div>
-
-## 📝 License
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-<div align="center">
-  <sub>Built with ❤️ by Your Team</sub>
-</div>
-
