@@ -13,11 +13,16 @@ export class TokenService{
     constructor(private refreshTokenRepository: Repository<RefreshToken>){}
 
     generateAccessToken(payload : JwtPayload){
-        let privateKey: Buffer;
+        let privateKey: string;
         let publicKey: Buffer;
 
+        if(!Config.PRIVATE_KEY){
+            const error = createHttpError(500, "SECRET_KEY is not set");
+            throw error;
+        }
+
             try{
-                privateKey = fs.readFileSync(path.join(__dirname, "../../certs/private.pem"));
+                privateKey = Config.PRIVATE_KEY;
                 // publicKey = fs.readFileSync(path.join(__dirname, "../../certs/public.pem"));
             }catch(err){
                 const error = createHttpError(500, "Error while reading private key");
