@@ -59,7 +59,7 @@ A robust authentication microservice built with TypeScript, Express, and TypeORM
 graph TD
     A[Client] -->|HTTP Request| B[Auth Service]
     B -->|Validate| C[JWT Middleware]
-    C -->|Query| D[PostgreSQL (Local/Cloud: Supabase)]
+    C -->|Query| D["PostgreSQL (Local/Cloud: Supabase)"]
     B -->|Generate| E[JWT Token]
     B -->|Store| F[User Data]
     style A fill:#f9f,stroke:#333,stroke-width:2px
@@ -82,7 +82,7 @@ flowchart LR
     end
     
     subgraph Database
-        H[(PostgreSQL (Local/Cloud: Supabase))]
+        H["PostgreSQL (Local/Cloud: Supabase)"]
     end
     
     Client --> D
